@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<script src="js/jquery-1.9.1.min.js"></script>
+	<script src="js/sea.js"></script>
+	<script>
+		$(function() {
+			seajs.config({
+				alias : {
+					t1 : "test1",
+					t2 : "test2",
+					t3 : "test3"
+				},
+				preload : [window.JSON ? "t2" : "t1"],
+				debug : 2
+			});
+
+			seajs.use(["t2", "t1", "t3"], function(ex2, ex1, ex3) {
+
+				ex2.smile();
+
+				ex1.cry();
+			});
+		});
+	</script>
+</head>
+<body>
+	
+</body>
+</html>

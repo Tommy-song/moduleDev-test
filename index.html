@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<style>
+		#ball {position: absolute;}
+	</style>
+	<script src="js/jquery-1.9.1.min.js"></script>
+	<script>
+		$(function() {
+			var ball = {
+				disX : 0,
+				disY : 0,
+				speedX : 0,
+				speedY : 0,
+				prevX : 0,
+				prevY : 0,
+				timer : null,
+				onEvent : function() {
+					$("#ball").on("mousedown", function(e) {
+						clearInterval(ball.timer);
+
+						ball.disX = e.clientX - $("#ball").offset().left;
+						ball.disY = e.clientY - $("#ball").offset().top;
+						ball.prevX = e.clientX;
+						ball.prevY = e.clientY;
+
+						var left = 0;
+						var top = 0;
+						$(window).on("mousemove", function(e) {
+							left = e.clientX - ball.disX;
+							top = e.clientY - ball.disY;
+
+							$("#ball").offset({left : left, top : top});
+
+							ball.speedX = e.clientX -  ball.prevX;
+							ball.speedY = e.clientY - ball.prevY;
+
+							ball.prevX = e.clientX;
+							ball.prevY = e.clientY;
+						});
+
+						$(window).on("mouseup", function() {
+							$(window).unbind("mousemove mouseup");
+							ball.move();
+						});
+
+						return false;
+					});
+				},
+				move : function() {
+					var left = 0;
+					var top = 0;
+
+					clearInterval(ball.timer);
+					ball.timer = setInterval(function() {
+						ball.speedY += 4;
+						left = $("#ball").offset().left + ball.speedX;
+						top = $("#ball").offset().top + ball.speedY;
+
+
+						if (top > $(window).height() - $("#ball").height()) {
+							top = $(window).height() - $("#ball").height();
+							ball.speedY *= -1 * 0.75;
+							ball.speedX *= 0.75;
+						}
+
+						if (top < 0) {
+							top = 0;
+							ball.speedY *= -1 * 0.75;
+							ball.speedX *= 0.75;
+						}
+
+						if (left < 0) {
+							left = 0;
+							ball.speedX *= -1 * 0.75;
+							ball.speedY *= 0.75;
+						}
+
+						if (left > $(window).width() - $("#ball").width()) {
+							left = $(window).width() - $("#ball").width();
+							ball.speedX *= -1 * 0.75;
+							ball.speedY *= 0.75;
+						}
+
+						$("#ball").offset({left : left, top : top});
+
+					}, 30);
+				}
+			};
+
+			ball.onEvent();
+		});
+	</script>
+</head>
+<body>
+	<img src="img/ball.jpg" alt="" id="ball">
+</body>
+</html>
